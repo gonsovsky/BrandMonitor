@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BrandMonitor.API.Persistence.Contexts;
+using BrandMonitor.API.Persistence;
 
 namespace BrandMonitor.API
 {
-
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {

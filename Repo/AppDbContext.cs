@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using BrandMonitor.API.Domain.Models;
-using System.Threading.Tasks;
 
-namespace BrandMonitor.API.Persistence.Contexts
+namespace BrandMonitor.API.Persistence
 {
     public class AppDbContext : DbContext
     {
@@ -16,8 +15,12 @@ namespace BrandMonitor.API.Persistence.Contexts
             
             builder.Entity<BrandTask>().ToTable("Tasks");
             builder.Entity<BrandTask>().HasKey(p => p.Id);
-            builder.Entity<BrandTask>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
-            builder.Entity<BrandTask>().Property(p => p.TimeStamp).IsRequired().ValueGeneratedOnAdd();
+            builder.Entity<BrandTask>().Property(p => p.Id)
+                .IsRequired()
+                .ValueGeneratedOnAdd();
+            builder.Entity<BrandTask>().Property(p => p.TimeStamp);
+
+            builder.Entity<BrandTask>().Property(p => p.Status);
         }
     }
 }

@@ -5,9 +5,9 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace BrandMonitor.API.Extensions
+namespace BrandMonitor.API.Helpers
 {
-    public static class MiddlewareExtensions
+    public static class Swagger
     {
         public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
         {

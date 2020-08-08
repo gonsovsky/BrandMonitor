@@ -1,42 +1,31 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
 using BrandMonitor.API.Domain.Models;
-using BrandMonitor.API.Domain.Repositories;
 using BrandMonitor.API.Domain.Services;
-using BrandMonitor.API.Domain.Services.Communication;
-using System.Collections.Generic;
 
 namespace BrandMonitor.API.Services
 {
     public class TaskService : ITaskService
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly TaskHostedService _taskHostedService;
 
-        public TaskService(ITaskRepository taskRepository)
+        public TaskService(ITaskRepository taskRepository, TaskHostedService taskHostedService)
         {
             _taskRepository = taskRepository;
+            _taskHostedService = taskHostedService;
         }
 
-        public async Task<TaskResponse> PostAsync()
+        public async Task<Guid> PostAsync()
         {
-            try
-            {
-                var id = await _taskRepository.AddAsync();
-
-                return new TaskResponse(id);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+            var id = await _taskRepository.AddAsync();
+            _taskHostedService.RunTask(id);
+            return id;
         }
 
-        public async Task<TaskResponse> GetAsync(Guid id)
+        public async Task<BrandTask> GetAsync(Guid id)
         {
-            var existingTask = await _taskRepository.FindByIdAsync(id);
-
-                return new TaskResponse(existingTask.Id);
+            return await _taskRepository.FindByIdAsync(id);
         }
     }
 }

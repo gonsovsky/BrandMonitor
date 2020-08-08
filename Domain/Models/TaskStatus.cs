@@ -5,13 +5,13 @@ namespace BrandMonitor.API.Domain.Models
 {
     public enum TaskStatus : byte
     {
-        [Description("Created")]
+        [Description("created")]
         Created = 1,
 
-        [Description("Running")]
+        [Description("running")]
         Running = 2,
 
-        [Description("Finished")]
+        [Description("finished")]
         Finished = 3,
     }
 }

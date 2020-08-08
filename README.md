@@ -1,13 +1,13 @@
-## BrandMonitor домашее задание
+п»ї#### BrandMonitor РґРѕРјР°С€РµРµ Р·Р°РґР°РЅРёРµ
 
-REAST API cервис 
+REAST API cРµСЂРІРёСЃ 
 	-POST /task
 	-GET /task/{id}
 
-## Запуск
+#### Р—Р°РїСѓСЃРє
 dotnet restore
 dotnet run
 
-## Проверить работу
+#### РџСЂРѕРІРµСЂРёС‚СЊ СЂР°Р±РѕС‚Сѓ
 
 https://localhost:5001/swagger

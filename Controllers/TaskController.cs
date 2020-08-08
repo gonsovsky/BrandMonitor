@@ -3,12 +3,13 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using BrandMonitor.API.Domain.Models;
 using BrandMonitor.API.Domain.Services;
-using BrandMonitor.API.Resources;
-using System.Collections.Generic;
+using System;
+using System.Net;
+using BrandMonitor.API.Domain.Responses;
 
 namespace BrandMonitor.API.Controllers
 {
-    [Route("/api/tasks")]
+    [Route("/task")]
     [Produces("application/json")]
     [ApiController]
     public class TaskController : Controller
@@ -27,20 +28,11 @@ namespace BrandMonitor.API.Controllers
         /// </summary>
         /// <returns>ID созданного задания</returns>
         [HttpPost]
-        [ProducesResponseType(typeof(TaskResource), 201)]
-        [ProducesResponseType(typeof(ErrorResource), 400)]
+        [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Accepted)]
         public async Task<IActionResult> PostAsync()
         {
-            var task = _mapper.Map<SaveTaskResource, BrandTask>(resource);
             var result = await _taskService.PostAsync();
-
-            if (!result.Success)
-            {
-                return BadRequest(new ErrorResource(result.Message));
-            }
-
-            var taskResource = _mapper.Map<BrandTask, TaskResource>(result.Resource);
-            return Ok(taskResource);
+            return Accepted(result);
         }
 
         /// <summary>
@@ -48,21 +40,18 @@ namespace BrandMonitor.API.Controllers
         /// </summary>
         /// <param name="id">ID задания</param>
         /// <returns>Информация о задании</returns>
-        [HttpPut("{id}")]
-        [ProducesResponseType(typeof(TaskResource), 201)]
-        [ProducesResponseType(typeof(ErrorResource), 400)]
-        public async Task<IActionResult> GetAsync(int id)
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TaskResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.NotFound)]
+        [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> GetAsync(Guid id)
         {
-            var task = _mapper.Map<SaveTaskResource, BrandTask>(resource);
-            var result = await _taskService.GetAsync(id, task);
+            var result = await _taskService.GetAsync(id);
+            if (result == null)
+                return NotFound(new ErrorResponse(null));
+            var taskResponse = _mapper.Map<BrandTask, TaskResponse>(result);
+            return Ok(taskResponse);
 
-            if (!result.Success)
-            {
-                return BadRequest(new ErrorResource(result.Message));
-            }
-
-            var taskResource = _mapper.Map<BrandTask, TaskResource>(result.Resource);
-            return Ok(taskResource);
         }
     }
 }
